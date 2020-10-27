@@ -40,7 +40,7 @@ namespace SuperScrollView
 
         void ShowItemPrefabDataList(LoopListView2 listView)
         {
-            EditorGUILayout.PropertyField(mItemPrefabDataList, mItemPrefabListContent);
+            //EditorGUILayout.PropertyField(mItemPrefabDataList, mItemPrefabListContent);
             if (mItemPrefabDataList.isExpanded == false)
             {
                 return;
@@ -49,7 +49,7 @@ namespace SuperScrollView
             if (GUILayout.Button("Add New"))
             {
                 mItemPrefabDataList.InsertArrayElementAtIndex(mItemPrefabDataList.arraySize);
-                if(mItemPrefabDataList.arraySize > 0)
+                if (mItemPrefabDataList.arraySize > 0)
                 {
                     SerializedProperty itemData = mItemPrefabDataList.GetArrayElementAtIndex(mItemPrefabDataList.arraySize - 1);
                     SerializedProperty mItemPrefab = itemData.FindPropertyRelative("mItemPrefab");
@@ -66,7 +66,8 @@ namespace SuperScrollView
                 SerializedProperty mItemPrefabPadding = itemData.FindPropertyRelative("mPadding");
                 SerializedProperty mItemStartPosOffset = itemData.FindPropertyRelative("mStartPosOffset");
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.PropertyField(itemData);
+                //EditorGUILayout.PropertyField(itemData);
+                itemData.isExpanded = EditorGUILayout.Foldout(itemData.isExpanded, "Element " + i);
                 if (GUILayout.Button("Remove"))
                 {
                     removeIndex = i;
@@ -78,7 +79,7 @@ namespace SuperScrollView
                 }
                 mItemPrefab.objectReferenceValue = EditorGUILayout.ObjectField("ItemPrefab", mItemPrefab.objectReferenceValue, typeof(GameObject), true);
                 mItemPrefabPadding.floatValue = EditorGUILayout.FloatField("ItemPadding", mItemPrefabPadding.floatValue);
-                if(listView.ArrangeType == ListItemArrangeType.TopToBottom || listView.ArrangeType == ListItemArrangeType.BottomToTop)
+                if (listView.ArrangeType == ListItemArrangeType.TopToBottom || listView.ArrangeType == ListItemArrangeType.BottomToTop)
                 {
                     mItemStartPosOffset.floatValue = EditorGUILayout.FloatField("XPosOffset", mItemStartPosOffset.floatValue);
                 }
@@ -109,7 +110,7 @@ namespace SuperScrollView
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(mSupportScrollBar, mSupportScrollBarContent);
             EditorGUILayout.PropertyField(mItemSnapEnable, mItemSnapEnableContent);
-            if(mItemSnapEnable.boolValue == true)
+            if (mItemSnapEnable.boolValue == true)
             {
                 EditorGUILayout.PropertyField(mItemSnapPivot, mItemSnapPivotContent);
                 EditorGUILayout.PropertyField(mViewPortSnapPivot, mViewPortSnapPivotContent);

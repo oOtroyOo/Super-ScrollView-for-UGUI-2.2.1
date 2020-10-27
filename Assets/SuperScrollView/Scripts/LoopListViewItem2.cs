@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SuperScrollView
 {
@@ -107,8 +110,10 @@ namespace SuperScrollView
             set
             {
                 mItemIndex = value;
+                RefreshFrame();
             }
         }
+
         public int ItemId
         {
             get
@@ -118,6 +123,7 @@ namespace SuperScrollView
             set
             {
                 mItemId = value;
+               RefreshFrame();
             }
         }
 
@@ -155,7 +161,7 @@ namespace SuperScrollView
                 {
                     return CachedRectTransform.localPosition.y;
                 }
-                else if(arrageType == ListItemArrangeType.BottomToTop)
+                else if (arrageType == ListItemArrangeType.BottomToTop)
                 {
                     return CachedRectTransform.localPosition.y + CachedRectTransform.rect.height;
                 }
@@ -221,7 +227,7 @@ namespace SuperScrollView
             {
                 if (ParentListView.IsVertList)
                 {
-                    return  CachedRectTransform.rect.height;
+                    return CachedRectTransform.rect.height;
                 }
                 else
                 {
@@ -237,6 +243,34 @@ namespace SuperScrollView
                 return ItemSize + mPadding;
             }
         }
+        private int refreshFrame;
 
+        protected virtual void Start()
+        {
+            foreach (Graphic graphic in transform.GetComponentsInChildren<Graphic>(true))
+            {
+                graphic.RegisterDirtyVerticesCallback(() => OnGraphicCallback(graphic));
+                graphic.RegisterDirtyLayoutCallback(() => OnGraphicCallback(graphic));
+                graphic.RegisterDirtyMaterialCallback(() => OnGraphicCallback(graphic));
+            }
+
+        }
+
+        private void OnGraphicCallback(Graphic graphic)
+        {
+            if (refreshFrame != Time.frameCount)
+            {
+                CanvasUpdateRegistry.UnRegisterCanvasElementForRebuild(graphic);
+            }
+        }
+
+        public void RefreshFrame()
+        {
+            refreshFrame = Time.frameCount;
+            foreach (Graphic graphics in transform.GetComponentsInChildren<Graphic>())
+            {
+                graphics.SetAllDirty();
+            }
+        }
     }
 }
